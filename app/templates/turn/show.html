@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %} Turnos {% endblock %}
+{% block head %}
+	<link href="{{ url_for('static', filename='css/turn.css') }}" rel="stylesheet" />
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <p>Email: {{ turn.email }}</p>
+  {% if turn.name != '' %}
+  <p>Nombre: {{ turn.name }}</p>
+  {% endif %}
+  {% if turn.surname != '' %}
+  <p>Apellido: {{ turn.surname }}</p>
+  {% endif %}
+  {% if turn.tel %}
+  <p>Telefono: {{ turn.tel }}</p>
+  {% endif %}
+  <p>Hora: {{ turn.starting_time }}</p>
+  <p>Fecha: {{ turn.date }}</p>
+  <p>Nombre del centro: {{ turn.center.nombre }}</p>
+
+{% endblock %}

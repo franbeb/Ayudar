@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+{% block title %} Turnos {% endblock %}
+{% block head %}
+	<link href="{{ url_for('static', filename='css/turn.css') }}" rel="stylesheet" />
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="turns">
+    <div class="turns-action">
+      <div class="filtros">
+        <button class="nice-button filter active btn">Center</button>
+        <button class="nice-button filter btn">Email</button>
+      </div>
+      <div class="search">
+        <input type="search" class="search-input" placeholder="Search...">
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre de centro</th>
+          <th>Fecha</th>
+          <th>Persona</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for turn in turns %}
+          <tr page="{{(((loop.index - 1) / page_elem)  + 1) | int  | string }}" class="pageNum">
+            <td class="center">{{ turn.center.nombre }} </td>
+            <td>{{ turn.starting_time }} - {{ turn.ending_time() }} {{turn.day()}}  </td>
+            <td class="email">{{ turn.email }}</td>
+            <td><a href="{{ url_for("site.turn_show", id = turn.id) }}"><i class="fas fa-eye"></i></a></td>
+            <td><a href="{{ url_for("site.turn_edit", id = turn.id) }}"><i class="fas fa-edit"></i></a></td>
+            <td><a href="{{ url_for("site.turn_destroy", id = turn.id) }}"><i class="fas fa-trash-alt"></i></a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pages">
+      {% for page_num in range(1, ((((turns|length) + page_elem - 1)/page_elem)|int) + 1) %}
+        <a class="page-link">{{page_num}}</a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script name="pagination">
+    document.addEventListener('DOMContentLoaded', function() {
+      var elem_page = JSON.parse('{{ page_elem | tojson }}');
+      var cant_elem = JSON.parse('{{ turns | length | tojson }}');
+      var search = "Center";
+
+
+      $("tbody tr").hide()
+      $("tbody tr.pageNum[page=1]").show()
+      $(".page-link").first().addClass("active")
+
+      $(".filter").on("click", () => {
+        $(".filter").toggleClass("active")
+        search = $(".filter.active").text()
+      })
+
+      $(".search-input").on("change", function() {
+        let search_text = $(this)[0].value
+        $("tbody tr").hide()
+        matching_turns = $("tbody tr").filter( function() {
+          let filtro = $(".filter.active").text().toLowerCase()
+          return $(this).children(`.${filtro}`).text().toLowerCase().substring(0, search_text.length) == search_text.toLowerCase()
+        })
+        matching_turns.show()
+        recalculatePagination(elem_page, matching_turns, matching_turns.length)
+      })
+
+      function recalculatePagination(elem_page, matching, cant_elem) {
+        $(".pageNum").attr("page", -1)
+        for(num in matching.toArray()) {
+          matching[num].setAttribute("page", parseInt(num / elem_page + 1))
+        }
+        $(".pages").empty()
+        for(var i = 1; i <= (cant_elem + elem_page - 1)/elem_page ; i++){
+          $('<a>',{
+              text: i,
+              class: 'page-link',
+              click: changePage
+          }).appendTo(".pages")
+        }
+        $("tbody tr").hide()
+        $("tbody tr.pageNum[page=1]").show()
+        $(".page-link.active").removeClass("active")
+        $(".page-link").first().addClass("active")
+      }
+
+      function changePage() {
+        $(".page-link.active").removeClass("active")
+        $(this).addClass("active")
+        $("tbody tr").hide()
+        $(`tbody tr.pageNum[page=${this.text}]`).show()
+      }
+      $(".page-link").on('click', changePage)
+
+    }, false)
+  </script>
+{% endblock %}

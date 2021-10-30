@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/animation-navbar.css') }}">
+
+{% endblock %}
+{% block content %}
+<hr>
+<div class="container">
+
+
+
+    <section>
+        <div class="container-fluid">
+            <h1 class="section-title mb-2 ">{{ config_saved().title }}</h1>
+            <p class="text-center text-muted h2">Bienvenido al panel para administrar el sitio</p>
+
+        </div>
+    </section>
+
+</div>
+
+
+
+</div>
+<section id="section-help">
+    <div class="container-fluid col-md-12">
+
+        <div class="row mt-1">
+            {% if admin() %}
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+                <div class="card">
+                    <div class="card-block block-1">
+                        <a href="/configuration">
+                            <h3 class="card-title">Panel de configuration</h3>
+                            <p class="card-text">Administra la configuracion</p>
+
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+                <div class="card">
+                    <div class="card-block block-2">
+                       
+                        <a href="/usuarios">
+                            <h3 class="card-title">Panel de usuarios</h3>
+                            <p class="card-text">Administra los usuarios</p>
+
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+                <div class="card">
+                    <div class="card-block block-3">
+                        <a href="/centers">
+                            <h3 class="card-title">Panel de centros</h3>
+                            <p class="card-text">Administra los centros</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+           
+            
+        </div>
+        
+    </div>
+    </div>
+   
+    {% endblock %}

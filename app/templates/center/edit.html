@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+{% block title %}Centros{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin="" />
+{% endblock %}
+{% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol style="background-color: rgb(255, 255, 255);" class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Editar Centro</li>
+  </ol>
+</nav>
+<div class="content">
+  <div class="container; mt-1; ml-1">
+
+    <div class="card">
+      <div class="card-header ">
+
+        <h2>Editar Centro</h2>
+
+      </div>
+      <div class="card-body">
+        <form class="col-md-8" action="{{url_for('site.center_edit', id = center.id)}}" method="POST"
+          enctype=multipart/form-data>
+
+          {{ form.csrf_token }}
+          {{ form.id(value=center.id, readonly=true, hidden=true) }}
+
+          {% if  center.estado is none %}
+          <p style=" color:rgb(36, 108, 156);">Estado de centro: Pendiente de aprobacion </p>
+          {% elif center.estado %}
+          <p style=" color: green;">Estado de centro: Aprobado </p>
+          {% else %}
+          <p style=" color: red;">Estado de centro: Rechazado </p>
+
+          {% endif %}
+          <div class="form-group">
+            <label> Email: </label> {{ form.email(value=center.email) }}
+
+          </div>
+
+          <div class="form-group">
+            <label> Nombre: </label> {{ form.nombre(value=center.nombre) }}
+
+          </div>
+
+          <div class="form-group">
+            <label> Direccion: </label> {{ form.direccion(value=center.direccion) }}
+
+          </div>
+
+          <div class="form-group">
+            <label> Telefono: </label> {{ form.telefono(value=center.telefono) }}
+
+          </div>
+          <div class="form-group">
+            {{ form.protocolo_vista(hidden=true,value=center.protocolo_vista) }}
+
+          </div>
+          <div class="form-group ">
+            <label> Hora de apertura: </label> {{ form.hora_apertura(type='time', value=center.hora_apertura ) }}
+          </div>
+          <div class="form-group ">
+            <label> Hora de cierre: </label> {{ form.hora_cierre(type='time',value=center.hora_cierre ) }}
+          </div>
+          <div class="form-group ">
+            <label> Web: </label> {{ form.web(value=center.web) }}
+          </div>
+
+          <div class="form-group ">
+            <label> Protocolo vista: {% if center.protocolo_vista %}<a href="/static/uploads/{{center.protocolo_vista}}"> {{center.protocolo_vista}} {% endif %}</a></label>
+            <input type=file name=file accept="application/pdf">
+            {% if center.protocolo_vista %}
+            <label>Borrar</label><input style="color:rgb(45, 76, 177) "  type="checkbox" id="borrar" name="borrar" value="Borrar">
+            {% endif %}
+          </div>
+          <div class="form-group">
+            {{ form.longitud(value=center.longitud, hidden=true) }}
+          </div>
+          <div class="form-group">
+            {{ form.latitud(value=center.latitud, hidden=true) }}
+          </div>
+
+          <div class="form-group">
+            <label> Tipo de centro: </label>
+
+            <select required name=tipos_centros class="form-control " multiple>
+
+
+              {% for tipo in tipos_centros %}
+
+              <option {% if tipo in center.tipo_centro %}selected=true {% endif %} value="{{tipo.id}}">{{tipo.nombre}}
+              </option>
+
+              {% endfor %}
+
+            </select>
+          </div>
+          <div class="map-container">
+            <div id="mapid"></div>
+
+
+          </div>
+          <div class="form-group">
+            <label>Municipio: </label>
+
+            <select required name=municipios class="form-control ">
+              <option selected=false>Seleccione un municipio</option>
+              {% for municipio in municipios %}
+              <option {% if center.municipio | int  == municipio[0]|int  %} selected=true {% endif %}
+                value="{{municipio[0]}}">{{municipio[1]}}</option>
+
+
+              {% endfor %}
+
+
+            </select>
+          </div>
+          <p>
+            <input class="btn btn-primary btn-primary" onclick=submitHandler() type="submit" value="Guardar">
+            <button class="btn btn-primary btn-primary" type="reset">Cancelar </button>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <a href="{{ url_for('site.center_index') }}" class="link">Volver</a>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+{{ super() }}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+
+{% endblock %}

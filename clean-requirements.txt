@@ -1,0 +1,22 @@
+# Aplicacion
+Flask-Session==0.3.0                    # Sesiones
+
+# Frontend
+Flask-Bootstrap==3.3.7.1                # Bootstrap
+
+# Validaciones
+WTForms==2.3.3                          # Validaciones del form
+email-validator==1.1.1                  # Validador de email
+
+# Base de datos
+Flask-SQLAlchemy==2.4.4                 # ORM-SQLAlchemy
+Flask-Migrate==2.5.3                    # Migraciones
+PyMySQL==0.9.3                          # Gestor de base de datos
+
+# Entorno de desarrollo
+pylint==2.6.0                           # Linter
+python-dotenv==0.14.0                   # Variables de entorno
+
+# Criticas
+Werkzeug==0.16.1
+cryptography==2.8

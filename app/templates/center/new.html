@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% block title %}Centros{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin="" />
+{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol style="background-color: rgb(255, 255, 255);" class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Registrar Centro</li>
+  </ol>
+</nav>
+<div class="content">
+  <div class="container; mt-1; ml-1">
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Crear Centro</h2>
+
+      </div>
+      <div class="card-body">
+        <form class="col-md-8 " action="{{ url_for('site.center_new') }}" method="POST" enctype=multipart/form-data>
+          {{ form.csrf_token }}
+
+          <div class="form-group">
+            <label> Email: </label> {{ form.email() }}
+
+          </div>
+
+          <div class="form-group">
+            <label> Nombre: </label> {{ form.nombre() }}
+
+          </div>
+
+          <div class="form-group">
+            <label> Direccion: </label> {{ form.direccion() }}
+
+          </div>
+
+          <div class="form-group">
+            <label> Telefono: </label> {{ form.telefono() }}
+
+          </div>
+
+          <div class="form-group ">
+            <label> Hora de apertura: </label> {{ form.hora_apertura(type='time') }}
+          </div>
+          <div class="form-group ">
+            <label> Hora de cierre: </label> {{ form.hora_cierre(type='time') }}
+          </div>
+          <div class="form-group ">
+            <label> Web: </label> {{ form.web() }}
+          </div>
+
+          <div class="form-group ">
+            <label> Protocolo vista: </label>
+            <input type=file name=file accept="application/pdf">
+
+          </div>
+          <div class="form-group">
+            {{ form.longitud( hidden=true) }}
+          </div>
+          <div class="form-group">
+            {{ form.latitud( hidden=true) }}
+          </div>
+
+          <div class="form-group">
+            <label> Tipo de centro: </label>
+
+            <select required name=tipos_centros class="form-control " multiple>
+
+
+              {% for tipo in tipos_centros %}
+
+              <option value="{{tipo.id}}">{{tipo.nombre}}
+              </option>
+
+              {% endfor %}
+
+            </select>
+          </div>
+          <div class="map-container">
+            <div id="mapid"></div>
+
+
+          </div>
+          <div class="form-group">
+            <label>Municipio: </label>
+
+            <select required name=municipios class="form-control ">
+              <option selected=false>Seleccione un municipio</option>
+              {% for municipio in municipios %}
+              <option value="{{municipio[0]}}">{{municipio[1]}}</option>
+
+
+              {% endfor %}
+
+
+            </select>
+          </div>
+          <p>
+            <input class="btn btn-primary btn-primary" onclick=submitHandler() type="submit" value="Guardar">
+            <button class="btn btn-primary btn-primary" type="reset">Cancelar </button>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <a href="{{ url_for('site.center_index') }}" class="link">Volver</a>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+{{ super() }}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+
+{% endblock %}

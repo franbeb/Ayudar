@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+<div class="wrapper">
+  <h1>Listado de usuarios</h1>
+  <nav aria-label="breadcrumb">
+    <ol style="background-color: rgb(255, 255, 255);" class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Listado Usuarios</li>
+
+    </ol>
+  </nav>
+
+<div class= "container wrapper ">
+
+<!-- Search form -->
+
+<form action="/usuarios" method="POST"  class="form-inline d-flex  md-form form-sm mt-0">
+
+  <div class="form-group">
+    <div>
+      <input name="username" id="search" lass="form-control form-control-sm ml-3 " type="text" placeholder="Ingrese username" aria-label="Buscar">
+  </div>
+  <button type="submit" name="search-by-user" class="btn btn-primary ">Buscar</button>
+
+</form>
+
+<form action="/usuarios" method="POST" class="form-inline d-flex  md-form form-sm mt-0" >
+  <div class="form-group">
+    <div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="gridRadios1" name="active" value="active">
+        <label class="form-check-label" for="inlineRadio1">Activ@</label>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="gridRadios2" name="active" value="not-active">
+        <label class="form-check-label" for="inlineRadio2">Bloquead@</label>
+      </div>
+
+    </div>
+  </div>
+  <button type="submit" name="search-by-active" class="btn btn-primary ">Buscar</button>
+
+</form>
+</div>
+  <div class="container justify-content-center">
+    <div class="row">
+      <div class="col-md-12 col-md-offset-1">
+        <div class="fresh-table full-color-blue">
+
+          <table  cant_elem ={{config_saved().cant_elem}} id="fresh-table" class="table ">
+            <a href="/usuarios/nuevo" class=" table-button btn ">Crear</a>
+            <thead>
+              <th data-field="id">ID</th>
+              <th data-field="first_name" data-sortable="true">Nombre</th>
+              <th data-field="last_name" data-sortable="true">Apellido</th>
+              <th data-field="first_name" data-sortable="true">Perfil</th>
+              <th data-field="first_name" data-sortable="true">Username</th>
+              <th data-field="state" data-sortable="true">E-mail</th>
+              <th>Accion</th>
+
+            </thead>
+            <tbody>
+
+              {% for user in users %}
+                {% if user.email != null %}
+                  <tr>
+                    <td>{{user.id}}</td>
+                    <td>{{user.first_name}}</td>
+                    <td>{{user.last_name}}</td>
+                    <td>{{user.perfil}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    <td>
+                      {% if user.active %}
+
+                          <a type="submit" href="/usuarios-active/{{user.id}}"
+                            class="btn btn-primary btn-danger" key="id">Bloquear</a>
+
+                        {% else %}
+
+                              <a type="submit" href="/usuarios-active/{{user.id}}"
+                              class="btn btn-primary btn-primary" key="id">Activar</a>
+
+                        {% endif %}
+                      <a type="Editar" href="/usuarios/{{user.id}}"
+                        class="btn btn-primary btn-primary" key="id">Editar</a>
+                        {% if user.username != 'admin' %}
+                          <a onclick="return confirm('Esta seguro que desea borrar al usuario?')"
+                           type="Eliminar" href="/usuarios-delete/{{user.id}}"
+                          class="btn btn-primary btn-danger" key="id">Eliminar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+    </div>
+
+
+
+
+</div>
+
+{% endblock %}
+{% block script %}
+{{ super() }}
+
+<script type="text/javascript">
+  var $table = $('#fresh-table')
+  $(function () {
+    $table.bootstrapTable({
+      classes: 'table table-hover table-striped',
+      toolbar: '.toolbar',
+      search: false,
+      showRefresh: false,
+      showToggle: false,
+      showColumns: true,
+      pagination: true,
+      striped: true,
+      sortable: true,
+      pageSize: $table.attr('cant_elem'),
+      pageList: [8, 10, 25, 50, 100],
+
+      formatShowingRows: function (pageFrom, pageTo, totalRows) {
+        return ''
+      },
+      formatRecordsPerPage: function (pageNumber) {
+        return pageNumber + ' rows visible'
+      }
+    })
+
+
+  })
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %} Turnos {% endblock %}
+{% block head %}
+	<link href="{{ url_for('static', filename='css/turn.css') }}" rel="stylesheet" />
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  {{ form.csrf_token }}
+  {% with form_url=url_for("site.turn_update", id = turn.id), center_name = turn.center.nombre %}
+    {% include "turn/_form.html" %}
+  {% endwith %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {                                // Es para esperar a jQuery - no es necesario
+      var center_id = JSON.parse("{{ turn.center.id | tojson }}")                             // ID del centro
+
+
+      async function getFreeHours(date) {                                                     // getFreeHours - llama a la api en base a un centro
+        const request = await fetch(`/turns/${date}/free_hours/${center_id}`);  
+        const data = await request.json();                                                    // espera la respuesta
+        return data;
+      };
+
+      async function updateFreeHours(date) {                                                   // updateFreeHours - recibe una fecha y actualiza el template
+        $("#starting_time").empty()                                                           // limpia la lista
+        $("#starting_time").append(new Option("Seleccione una hora",""))
+        free_hours = await getFreeHours(date.toJSON().split("T")[0])
+        free_hours.forEach( hour => $("#starting_time").append(new Option(hour,hour)))
+      }
+
+      $("[type=date]").on("change", function() {
+        let date = new Date($(this).val())
+        updateFreeHours(date)
+      });
+
+      // Inicializacion
+      var selected = $("#starting_time").find(":selected")
+      $("#starting_time").empty()
+      let date = new Date($("[type=date]").val())
+      updateFreeHours(date)
+
+      $("#starting_time").append(selected)
+      $("#starting_time").val(selected.text).prop('selected', 'selected').change();
+
+    }, false)
+  </script>
+{% endblock %}

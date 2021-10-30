@@ -1,0 +1,5 @@
+[MESSAGES CONTROL]
+disable = no-member,
+ missing-class-docstring,
+ too-few-public-methods,
+ line-too-long

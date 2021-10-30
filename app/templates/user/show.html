@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %} Usuarios {% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol style="background-color: rgb(255, 255, 255);" class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Mostrar usuario </li>
+  </ol>
+</nav>
+<div>
+  <div class="content justify-content-user">
+    <div class="card">
+      <div class="card-header">
+        <div class="turn-holder">
+          <h2>{{ user.username }}</h2>
+        </div>
+      </div>
+      <div class="card-body col-lg-10">
+    
+        <p> Email: {{user.email}}</p>
+        <p> Nombre: {{user.first_name}}</p>
+        <p> Apellido: {{user.last_name}}</p>
+        <p> Perfil: {{user.perfil}}</p>
+       
+        <p>Roles:</p>
+
+        <ul class="list-group col-lg-4">
+          {% for role in user.roles %}
+
+          <li class="list-group-item ">-{{role.name}}</li>
+
+          {% endfor %}
+        </ul>
+        <!-- Hay que agregar las rutas al site PARA HACER -->
+        <a class='btn btn-primary btn-primary mt-1' href="/" class="link">Volver</a>
+        <a class='btn btn-danger btn-primary mt-1' href="{{url_for('site.user_change_password')}}" class="link">Cambiar contraseña</a>
+      </div>
+
+    </div>
+  </div>
+  {% endblock %}

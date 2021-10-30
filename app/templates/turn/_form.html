@@ -1,0 +1,53 @@
+{% block content %}
+  <section class="appointment-section">
+    <div class="container">
+        <div class="sec-title">
+            <div class="title">Turnos - {{center_name}}</div>
+              <h2>Agendá un nuevo turno</h2>
+          </div>
+          <div class="row clearfix">
+            <div class="form-column col-md-8 col-sm-12 col-xs-12">
+              <div class="default-form">
+                  <form method="post" action="{{ form_url }}">
+                      {{ form.csrf_token }}
+                      <div class="row clearfix">
+                          <div class="column col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group">
+                                {{ form.email.label }}
+                                {{ form.email(placeholder="ejemplo@gmail.com") }}
+                                {{ form.email.errors | join(", ") }}
+                              </div>
+                              <div class="form-group">
+                                {{ form.starting_time.label }}
+                                {{ form.starting_time }}
+                                {{ form.starting_time.errors | join(", ") }}
+                              </div>
+                          </div>
+                          <div class="column col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                              {{ form.date.label }}
+                              {{ form.date }}
+                              {{ form.date.errors | join(", ") }}
+                            </div>
+                          </div>
+                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+                              <button class="theme-btn appointment-btn" type="submit" name="submit-form">Realizar turno</button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+            </div>
+            <div class="schedule-column col-md-4 col-sm-12 col-xs-12">
+              <div class="inner-column">
+                  <h2>Días hábiles:</h2>
+                  <ul class="time-list">
+                      <li> Todos los dias de 9.00 AM a 4.00 PM</li>
+                      <li><strong>El formato del las fechas puede variar segun el navegador</strong></li>
+                      <li class="closed">* Los turnos duran 30 minutos.</li>
+                  </ul>
+              </div>
+            </div>
+          </div>
+      </div>
+  </section>
+{% endblock %}

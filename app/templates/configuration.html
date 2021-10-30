@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Configuracion de la pagina{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    <form class="configuration_form m-3" method="post">
+        <label for="titulo"> Titulo de la pagina principal
+            <input id="titulo" value="{{config.title}}"  type="text" name="titulo" required/>
+        </label>
+        <label for="descripcion" > Descripcion de la pagina principal
+        <textarea id="descripcion" style="display: block" type="text" name="descripcion" required>{{config.description}}</textarea>
+    </label>
+        <label for="mail_contacto" > Mail de contacto de la pagina principal
+        <input id="mail_contacto" value= "{{config.mail}}"  type="email" name="mail_contacto" required/>
+    </label>
+        <label for="habilitar_sitio"> Habilitar
+        <input id="habilitar_sitio" type="checkbox" name="habilitar_sitio" {% if config.habilitado == 1 %} checked {% endif %} />
+    </label>
+        <label for="cant_elementos" > Cantidad de elementos por pagina
+        <input id="cant_elementos" value="{{config.cant_elem}}"  min="0" required type="number" name="cant_elementos"/>
+    </label>
+        <input type="submit" value="Actualizar" />
+    </form>
+{% endblock %}

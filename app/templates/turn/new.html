@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %} Turnos {% endblock %}
+{% block head %}
+	<link href="{{ url_for('static', filename='css/turn.css') }}" rel="stylesheet" />
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  {{ form.csrf_token }}
+  {{ form.center_id(value=center.id, readonly=true, hidden=true) }}
+  {% with form_url=url_for("site.turn_create", center_id = center.id), center_name = center.nombre %}
+    {% include "turn/_form.html" %}
+  {% endwith %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      var center_id = JSON.parse("{{ center.id | tojson }}")
+      async function getFreeHours(date) {
+        const request = await fetch(`/turns/${date}/free_hours/${center_id}`);
+        const data = await request.json();
+        return data;
+      };
+
+      async function updateFreeHours(date) {
+        $("#starting_time").empty()
+        $("#starting_time").append(new Option("Seleccione una hora",""))
+        free_hours = await getFreeHours(date.toJSON().split("T")[0])
+        free_hours.forEach( hour => $("#starting_time").append(new Option(hour,hour)))
+      }
+
+      $("[type=date").on("change", function() {
+        let date = new Date($(this).val())
+        updateFreeHours(date)
+      });
+
+      // Inicializacion
+      $("#starting_time").empty()
+      $("#starting_time").append(new Option("Seleccione un fecha",""))
+    }, false)
+  </script>
+{% endblock %}

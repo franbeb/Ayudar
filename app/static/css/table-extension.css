@@ -1,0 +1,26 @@
+.fresh-table {
+  position: relative;
+}
+
+.fresh-table .table-button {
+  position: absolute;
+  top: 1.25rem;
+  left: 1rem;
+
+  height: calc(1.5em + .75rem + 2px);
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  width: 6rem;
+  border: 1px solid #ced4da;
+  border-radius: .25rem !important;
+}
+
+.th-inner, .no-records-found {
+  color: #FFFFFF
+}
+
+.btn-group .btn-secondary {
+  background-color: transparent;
+}

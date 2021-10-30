@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='error.css') }}" />
+    {% endblock %}
+    <title>Error!</title>
+  </head>
+  <body>
+    <h1>{{ error_name }}</h1>
+    <p class="zoom-area"><b>Error!</b> {{ error_description }} </p>
+      <div class="link-container">
+        {% if error_name == "503 Service Unavailable Error" %}
+          <a href="{{ url_for('site.auth_login') }}" class="more-link">Log in</a>
+        {% else %}
+          <a href="/" class="more-link">Go to the homepage</a>
+        {% endif %}
+      </div>
+  </body>
+</html>

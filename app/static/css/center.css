@@ -1,0 +1,24 @@
+/* light-blue = #00adc1 // hovered: #03818f; */
+
+a.turn-button {
+  color: #00adc1;
+  border-width: 1.2px;
+  border-color: #00adc1;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  line-height: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+a.turn-button:hover{
+  color: #03818f;
+}
+
+.turn-holder {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}

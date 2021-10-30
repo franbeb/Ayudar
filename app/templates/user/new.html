@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<h2>Crear un usuario</h2>
+
+<nav aria-label="breadcrumb">
+  <ol style="background-color: rgb(255, 255, 255);" class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Registrarse</li>
+  </ol>
+</nav>
+<div style="width: 35%; margin-left: 1rem;">
+
+  <form action="/usuarios/nuevo/post" method="POST">
+
+    {{ form.csrf_token }}
+
+    <div class="form-group" name="create-user">
+      <label> Email: <label> {{ form.email }}
+
+    </div>
+
+    <div class="form-group" name="create-user">
+      <label> Contraseña: <label> {{ form.password }}
+
+    </div>
+
+    <div class="form-group" name="create-user">
+      <label> Nombre: <label> {{ form.first_name }}
+
+    </div>
+
+    <div class="form-group" name="create-user">
+      <label> Apellido: <label> {{ form.last_name }}
+
+    </div>
+
+    <div class="form-group" name="create-user">
+      <label> Username: <label> {{ form.username }}
+
+    </div>
+
+    <div class="form-group" name="create-user">
+      <label> Perfil: <label> {{ form.perfil }}
+    </div>
+<!--
+    {{form.roles (class="form-check form-check-inline" ) |safe  }}
+-->
+
+
+      Roles:
+      {% for role in form.roles %}
+
+        <div class="form-check form-check-inline" >
+            {{ role(class="form-check-input") }}
+            {{ role.label(class="form-check-label") }}
+        </div>
+
+      {% endfor %}
+
+    <p>
+      <button class="btn btn-primary btn-primary" type="reset">Limpiar</button>
+      <input class="btn btn-primary btn-success" type="submit" value="Crear">
+
+    </p>
+
+  </form>
+  <a href="{{ url_for('site.user_index') }}" class="link">Volver</a>
+
+
+{% endblock %}

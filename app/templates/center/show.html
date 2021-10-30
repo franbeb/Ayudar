@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block title %} Centros {% endblock %}
+{% block head %}
+<link href="{{ url_for('static', filename='css/center.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin="" />
+{{ super() }}
+{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol style="background-color: rgb(255, 255, 255);" class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Mostrar centro </li>
+  </ol>
+</nav>
+<div>
+  <div class="content justify-content-center">
+    <div class="card">
+      <div class="card-header">
+        <div class="turn-holder">
+          <h2>{{ center.nombre }}</h2>
+          <a class="btn turn-button right" href="{{ url_for('site.turn_index', center_id = center.id) }}">
+            <span> Turnos <i class="far fa-calendar-alt"></i> </span>
+          </a>
+        </div>
+      </div>
+      <div class="card-body col-lg-10">
+        {% if  center.estado == None %}
+        <p style=" color:rgb(36, 108, 156);">Estado de centro: Pendiente de aprobacion </p>
+        {% elif center.estado %}
+        <p style=" color: green;">Estado de centro: Aprobado </p>
+        {% else %}
+        <p style=" color: red;">Estado de centro: Rechazado </p>
+
+        {% endif %}
+        <p> Email: {{center.email}}</p>
+        <p> Direccion: {{center.direccion}}</p>
+        <p> Telefono: {{center.telefono}}</p>
+        <p> Hora de apertura: {{center.hora_apertura}}</p>
+        <p> Hora de cierre: {{center.hora_cierre}}</p>
+        <p> Web: {{center.web}}</p>
+        <p> Municipio: {{municipio}}</p>
+        <label> Protocolo vista: {% if center.protocolo_vista %}<a href="/static/uploads/{{center.protocolo_vista}}"> {{center.protocolo_vista}} {% else  %}No hay ningun protocolo cargado{% endif %}</a></label>
+        {% if center.latitud and center.longitud %}
+        <p> Ubicacion:
+        <p>
+          <input hidden id="latitud" name="latitud" type="text" value={{center.latitud}}>
+          <input hidden id="longitud" name="longitud" type="text" value="{{center.longitud}}">
+        <div class="map-container">
+          <div id="mapid"></div>
+
+
+        </div>
+        {% endif %}
+        <p>Tipo de centro:</p>
+
+        <ul class="list-group col-lg-4">
+          {% for tipo in center.tipo_centro %}
+
+          <li class="list-group-item ">-{{tipo.nombre}}</li>
+
+          {% endfor %}
+        </ul>
+        <a class='btn btn-primary btn-primary mt-1' href="{{ url_for('site.center_index') }}" class="link">Volver</a>
+
+      </div>
+
+    </div>
+  </div>
+  {% endblock %}
+  {% block script %}
+  {{ super() }}
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+  <script>
+
+    window.onload = () => {
+      var longitud = document.getElementById('longitud').getAttribute('value');
+      var latitud = document.getElementById('latitud').getAttribute('value');
+      if (longitud & latitud) {
+        map = L.map('mapid').setView([latitud, longitud], 13);
+        marker = L.marker([latitud, longitud]).addTo(map);
+      }
+      else{
+        map = L.map('mapid').setView([-34.9187,-57.956],13);
+      }
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    };
+
+  </script>
+
+  {% endblock %}

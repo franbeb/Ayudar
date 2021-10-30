@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+{% block title %}Centros{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<div class="wrapper">
+  <h1>Listado de centros</h1>
+  <nav aria-label="breadcrumb">
+    <ol style="background-color: rgb(255, 255, 255);" class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Listado Centros</li>
+    </ol>
+  </nav>
+  <div class="container wrapper ">
+  </div>
+
+  <div class="container justify-content-center">
+    <div class="row">
+      <div class="col-md-12 col-md-offset-2">
+        <div class="fresh-table full-color-blue">
+          <form class="float-right"  action="{{url_for('site.center_index')}}" method="POST">
+            <div class="float-right search btn-group">
+              <input name="search" class="form-control mr-2 mt-4 search-input" type="search" placeholder="Buscar centro" autocomplete="off">
+              <select class=" mt-4 mr-3 form-control" id="filter" name='filter'>
+                <option style="color: black;">Nombre</option>
+                <option value ="1" style="color: black;">Aprobado</option>
+                <option value ="0" style="color: black;">Rechazado</option>
+                <option  value ="None" style="color: black;">Pendiente de aprobacion</option>
+
+              </select>
+              <button type="submit" hidden name="search-by-active" class="btn btn-primary ">Buscar</button>
+            </div>
+
+          </form>
+          <table cant_elem={{config_saved().cant_elem}} id="fresh-table" class="table">
+            <a type="submit" href="{{ url_for('site.center_new') }}" class="table-button btn" key="id">CREAR</a>
+            
+
+            <thead>
+              <th>ID</th>
+              <th data-field="nombre" data-sortable="true">Nombre</th>
+              <th data-field="direccion" data-search="true" data-sortable="false">Direccion</th>
+              <th data-field="estado" data-sortable="true">Estado</th>
+              <th data-field="hora_apertura" data-sortable="true" data-search="false" data-search="false">hora_apertura
+              </th>
+              <th data-field="hora_cierre" data-sortable="true" data-search="false">hora_cierre</th>
+              <th>Accion</th>
+            </thead>
+            <tbody>
+              {% for center in centers %}
+              {% if center.nombre != null %}
+              <tr>
+                <td>{{center.id}}</td>
+                <td>{{center.nombre}}</td>
+                <td>{{center.direccion}}</td>
+                <td>{% if center.estado is none %}Pendiente de aprobacion {% elif center.estado %}Aprobado {% else %}
+                  Rechazado{% endif %}</td>
+                <td>{{center.hora_apertura}}</td>
+                <td>{{center.hora_cierre}}</td>
+               
+                  <td>
+                  <a href="{{ url_for('site.center_show', id = center.id) }}"><i class="fas fa-eye ml-1"></i></a>
+                  <a href="{{url_for('site.center_edit', id = center.id)}}"><i class="fas fa-edit ml-1"></i></a>
+                  {% if admin() %}
+                  <a onclick="return confirm('Esta seguro que desea borrar al centro?')" href="{{url_for('site.center_destroy', id = center.id)}}"><i class="fas fa-trash-alt ml-1"></i></a>
+          
+                  {% endif %}
+                  {% if operator() or admin() %}
+                      {% if not center.estado or center.estado == None  %}
+                      <a href="{{ url_for('site.center_approve', id = center.id) }}"><i class="fas fa-thumbs-up ml-1"></i></a>
+                      {% endif %}
+                      {% if center.estado or center.estado == None  %}
+                      <a href="{{ url_for('site.center_disapprove', id = center.id) }}"><i class="fas fa-thumbs-down ml-1"></i></a>
+
+
+                      {% endif %}
+                    {% endif %}
+                </td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+  {% block script %}
+  {{ super() }}
+
+  <script type="text/javascript">
+    var $table = $('#fresh-table')
+    $(function () {
+      $table.bootstrapTable({
+        classes: 'table table-hover table-striped',
+        toolbar: '.toolbar',
+        search: false,
+        showRefresh: false,
+        showToggle: false,
+        showColumns: false,
+        pagination: true,
+        striped: true,
+        sortable: true,
+        pageSize: $table.attr('cant_elem'),
+        pageList: [],
+
+
+        formatShowingRows: function (pageFrom, pageTo, totalRows) {
+          return ''
+        },
+        formatRecordsPerPage: function (pageNumber) {
+          return pageNumber + ' rows visible'
+        }
+      })
+
+
+    })
+
+  </script>
+  
+
+  {% endblock %}

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol id="breadcrumb" class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Login</li>
+  </ol>
+</nav>
+<div id="box">
+  <h1>Iniciar sesión</h1>
+  <form action="{{ url_for('site.auth_authenticate') }}" method="POST">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Correo</label>
+        <input required name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Ingrese su correo">
+        <small id="emailHelp" class="form-text text-muted">Nunca vamos a compartir tu correo electronico con nadie.</small>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Contraseña</label>
+        <input required name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Ingrese contraseña">
+    </div>
+
+    <button type="submit" value="Login" class="btn btn-primary">Ingresar</button>
+  </form>
+
+  <a href="/login-oauth"> O autenticate con Google. </a>
+</div>
+
+{% endblock %}
